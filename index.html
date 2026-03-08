@@ -118,6 +118,109 @@
                 <p>Memuat postingan...</p>
             </div>
         </div>
+        <div id="page-jelajah" class="page" style="display: none; padding: 16px;">
+            <div style="position: sticky; top: 0; background: white; padding: 8px 0; z-index: 5;">
+                <div style="display: flex; align-items: center; background: #f5f5f5; border-radius: 999px; padding: 8px 16px;">
+                    <i class="fas fa-search" style="color: #a8a29e; margin-right: 8px;"></i>
+                    <input type="text" id="searchInput" placeholder="Cari orang, tempat, atau topik..." 
+                   style="border: none; background: transparent; width: 100%; outline: none;">
+                   </div>
+                   </div>
+                   
+                   <div id="trendingSection" style="margin-top: 16px;">
+                       <h3 style="font-weight: 600; margin-bottom: 12px;">🔥 Trending di Nusantara</h3>
+                       <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                           <span class="trending-tag">#KulinerJogja</span>
+                           <span class="trending-tag">#RajaAmpat</span>
+                           <span class="trending-tag">#BaliFashion</span>
+                           <span class="trending-tag">#MusikIndie</span>
+                           <span class="trending-tag">#CeritaRantau</span>
+                           </div>
+                           </div>
+                           
+                           <div id="exploreFeed" style="margin-top: 20px;">
+                           </div>
+                           </div>
+                           
+                           <div id="page-notifikasi" class="page" style="display: none; padding: 16px;">
+                               <h2 style="font-weight: 700; margin-bottom: 16px;">Notifikasi</h2>
+                               <div id="notificationsList">
+                </div>
+                </div>
+                
+                <div id="page-profil" class="page" style="display: none;">
+                    <div id="profileHeader" style="position: relative;">
+                        <div style="height: 120px; background: linear-gradient(135deg, #f97316, #a855f7);"></div>
+                        <div style="padding: 0 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: -40px;">
+                                <img id="profileAvatar" src="" alt="Avatar" 
+                     style="width: 80px; height: 80px; border-radius: 50%; border: 4px solid white; background: #e5e5e5;">
+                     <button id="editProfileBtn" style="background: #f97316; color: white; border: none; padding: 8px 20px; border-radius: 999px; font-weight: 500;">
+                    Edit Profil
+                </button>
+                </div>
+            
+            <div style="margin-top: 12px;">
+                <h2 id="profileName" style="font-weight: 700; font-size: 20px;">Loading...</h2>
+                <p id="profileUsername" style="color: #78716c; font-size: 14px;">@username</p>
+                <p id="profileBio" style="margin: 12px 0; font-size: 14px;">Halo! Aku pengguna ScrollOne 👋</p>
+            </div>
+            
+            <div style="display: flex; gap: 24px; margin: 16px 0;">
+                <div><span id="postCount" style="font-weight: 700;">0</span> <span style="color: #78716c;">postingan</span></div>
+                <div><span id="followersCount" style="font-weight: 700;">0</span> <span style="color: #78716c;">pengikut</span></div>
+                <div><span id="followingCount" style="font-weight: 700;">0</span> <span style="color: #78716c;">mengikuti</span></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tab: Postingan user -->
+    <div style="margin-top: 16px; border-top: 1px solid #e5e5e5;">
+        <div style="display: flex;">
+            <button id="profilePostsTab" class="profile-tab active" style="flex: 1; padding: 12px; border-bottom: 2px solid #f97316;">📷 Postingan</button>
+            <button id="profileLikesTab" class="profile-tab" style="flex: 1; padding: 12px; color: #78716c;">❤️ Disukai</button>
+        </div>
+    </div>
+    
+    <div id="profilePostsGrid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px;">
+        <!-- Grid postingan user -->
+    </div>
+    
+    <div id="profileLikesGrid" style="display: none; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px;">
+        <!-- Grid postingan yang disukai -->
+    </div>
+</div>
+
+<!-- ========== MODAL DETAIL POST + KOMENTAR ========== -->
+<div id="postModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+    <div style="background: white; max-width: 500px; width: 90%; max-height: 80vh; border-radius: 20px; overflow-y: auto;">
+        <div style="padding: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h3 style="font-weight: 700;">Detail Postingan</h3>
+                <button id="closePostModal" style="background: none; border: none; font-size: 20px;">✕</button>
+            </div>
+            
+            <div id="modalPostContent">
+                <!-- Konten post akan diisi JS -->
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <h4 style="font-weight: 600; margin-bottom: 12px;">💬 Komentar</h4>
+                <div id="commentsList" style="max-height: 200px; overflow-y: auto;">
+                    <!-- Komentar akan di-load -->
+                </div>
+                
+                <div style="display: flex; gap: 8px; margin-top: 12px;">
+                    <input type="text" id="commentInput" placeholder="Tulis komentar..." 
+                           style="flex: 1; padding: 10px; border: 1px solid #e5e5e5; border-radius: 999px;">
+                    <button id="submitComment" style="background: #f97316; color: white; border: none; padding: 10px 20px; border-radius: 999px;">
+                        Kirim
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
     </div>
 
     <!-- Bottom Nav -->
