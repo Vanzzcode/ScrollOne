@@ -5,14 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ScrollOne · Beranda</title>
     
-    <!-- CSS -->
-    <link rel="stylesheet" href="style.css">
-    
     <!-- Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: #f9f5f0;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5l25 15v20l-25 15-25-15V20l25-15z' fill='%23e2d9cc' fill-opacity='0.15'/%3E%3C/svg%3E");
+            transition: background-color 0.3s;
+        }
+        
+        body.dark {
+            background-color: #1c1917;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5l25 15v20l-25 15-25-15V20l25-15z' fill='%233f3a36' fill-opacity='0.25'/%3E%3C/svg%3E");
+        }
+        
         .app-header {
             background: white;
             border-bottom: 1px solid #e7e5e4;
@@ -23,15 +43,31 @@
             position: sticky;
             top: 0;
             z-index: 10;
+            transition: all 0.3s;
         }
+        
+        body.dark .app-header {
+            background: #1c1917;
+            border-color: #44403c;
+        }
+        
         .feed { padding: 16px; }
+        
         .post-card {
             background: white;
             border: 1px solid #e7e5e4;
             border-radius: 16px;
             padding: 16px;
             margin-bottom: 16px;
+            transition: all 0.3s;
         }
+        
+        body.dark .post-card {
+            background: #1c1917;
+            border-color: #44403c;
+            color: #e5e5e4;
+        }
+        
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -44,14 +80,23 @@
             padding: 8px 0;
             max-width: 400px;
             margin: 0 auto;
+            z-index: 100;
         }
+        
+        body.dark .bottom-nav {
+            background: #1c1917;
+            border-color: #44403c;
+        }
+        
         .nav-item {
             color: #a8a29e;
             font-size: 20px;
             padding: 8px 16px;
             cursor: pointer;
         }
+        
         .nav-item.active { color: #d97706; }
+        
         .filter-chip {
             display: inline-block;
             padding: 6px 16px;
@@ -62,18 +107,255 @@
             white-space: nowrap;
             cursor: pointer;
         }
+        
+        body.dark .filter-chip {
+            background: #292524;
+            color: #e5e5e4;
+        }
+        
         .filter-chip.active {
             background: #d97706;
             color: white;
         }
+        
         .page { display: none; }
         .page.active { display: block; }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        
+        .modal-content {
+            background: white;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            border-radius: 20px;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        body.dark .modal-content {
+            background: #1c1917;
+            color: #e5e5e4;
+        }
+        
+        /* Profile */
+        .profile-tab {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            color: #78716c;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .profile-tab.active {
+            color: #d97706;
+            font-weight: 600;
+            border-bottom: 2px solid #d97706;
+        }
+        
+        body.dark .profile-tab {
+            color: #a8a29e;
+        }
+        
+        body.dark .profile-tab.active {
+            color: #fbbf24;
+            border-bottom-color: #fbbf24;
+        }
+        
+        .post-thumbnail {
+            aspect-ratio: 1;
+            background: #e5e5e5;
+            cursor: pointer;
+            overflow: hidden;
+            border-radius: 4px;
+        }
+        
+        body.dark .post-thumbnail {
+            background: #292524;
+        }
+        
+        /* Upload button */
+        .upload-btn {
+            background: #d97706;
+            color: white;
+            border: none;
+            border-radius: 999px;
+            padding: 12px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .upload-btn:hover {
+            background: #b45309;
+        }
+        
+        /* Form */
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #57534e;
+            margin-bottom: 4px;
+        }
+        
+        body.dark .form-group label {
+            color: #a8a29e;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #d6d3d1;
+            border-radius: 12px;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+        
+        body.dark .form-group input,
+        body.dark .form-group textarea,
+        body.dark .form-group select {
+            background: #292524;
+            border-color: #44403c;
+            color: #e5e5e4;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #f3f4f6;
+            border-top-color: #d97706;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Trending tags */
+        .trending-tag {
+            background: #f5f5f4;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        body.dark .trending-tag {
+            background: #292524;
+            color: #e5e5e4;
+        }
+        
+        .trending-tag:hover {
+            background: #e5e5e4;
+        }
+        
+        /* Notifikasi */
+        .notification-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            border-bottom: 1px solid #e5e5e4;
+            transition: background 0.2s;
+        }
+        
+        body.dark .notification-item {
+            border-bottom-color: #292524;
+        }
+        
+        .notification-item:hover {
+            background: #f5f5f4;
+        }
+        
+        body.dark .notification-item:hover {
+            background: #292524;
+        }
+        
+        /* Video */
+        video {
+            max-width: 100%;
+            border-radius: 12px;
+        }
+        
+        /* Preview */
+        .preview-container {
+            margin-top: 12px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .preview-container img,
+        .preview-container video {
+            max-height: 200px;
+            border-radius: 12px;
+        }
+        
+        .remove-preview {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
+    <!-- ========== KONFIGURASI SUPABASE ========== -->
+    <script>
+        window.SUPABASE_URL = 'https://ruspdjqxaudsurkidhpp.supabase.co';
+        window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1c3BkanF4YXVkc3Vya2lkaHBwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEzNTI3MTcsImV4cCI6MjA1NjkyODcxN30.3u1CqQvUxG_zMqAIb0M05i4MgAky8VhHbb81Tf6u_sU';
+        window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        window.getSession = async function() {
+            const { data: { session } } = await supabase.auth.getSession();
+            return session;
+        };
+        
+        window.getCurrentUser = async function() {
+            const { data: { user } } = await supabase.auth.getUser();
+            return user;
+        };
+        
+        window.logout = async function() {
+            await supabase.auth.signOut();
+            window.location.href = 'login.html';
+        };
+    </script>
+
     <!-- Loading -->
-    <div id="loadingOverlay" style="display: none; position: fixed; inset: 0; background: white; z-index: 1000; align-items: center; justify-content: center;">
-        <div class="loading"></div>
+    <div id="loadingOverlay" style="display: none; position: fixed; inset: 0; background: white; z-index: 2000; align-items: center; justify-content: center;">
+        <div class="loading" style="width: 40px; height: 40px;"></div>
     </div>
 
     <!-- Main App -->
@@ -89,7 +371,7 @@
             </div>
             
             <div style="display: flex; align-items: center; gap: 12px;">
-                <img id="userAvatar" src="" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid #d97706; display: none;">
+                <img id="userAvatar" src="" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid #d97706; display: none; object-fit: cover;">
                 <button id="darkToggle" style="background: none; border: none; font-size: 18px; cursor: pointer; color: #57534e;">
                     <i class="fas fa-moon"></i>
                 </button>
@@ -106,9 +388,10 @@
             <span class="filter-chip" data-region="Sumatera">⛰️ Sumatera</span>
             <span class="filter-chip" data-region="Kalimantan">🌴 Kalimantan</span>
             <span class="filter-chip" data-region="Sulawesi">🦉 Sulawesi</span>
+            <span class="filter-chip" data-region="Papua">🏝️ Papua</span>
         </div>
 
-        <!-- HALAMAN BERANDA (FEED) -->
+        <!-- HALAMAN BERANDA -->
         <div id="page-beranda" class="page active">
             <div class="feed" id="feedContainer">
                 <div style="text-align: center; padding: 40px 0; color: #a8a29e;">
@@ -120,7 +403,7 @@
         
         <!-- HALAMAN JELAJAH -->
         <div id="page-jelajah" class="page" style="padding: 16px;">
-            <div style="position: sticky; top: 0; background: white; padding: 8px 0; z-index: 5;">
+            <div style="position: sticky; top: 0; background: #fafaf9; padding: 8px 0; z-index: 5;">
                 <div style="display: flex; align-items: center; background: #f5f5f5; border-radius: 999px; padding: 8px 16px;">
                     <i class="fas fa-search" style="color: #a8a29e; margin-right: 8px;"></i>
                     <input type="text" id="searchInput" placeholder="Cari orang, tempat, atau topik..." 
@@ -155,8 +438,8 @@
                 <div style="padding: 0 16px;">
                     <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: -40px;">
                         <img id="profileAvatar" src="" alt="Avatar" 
-                             style="width: 80px; height: 80px; border-radius: 50%; border: 4px solid white; background: #e5e5e5;">
-                        <button id="editProfileBtn" style="background: #f97316; color: white; border: none; padding: 8px 20px; border-radius: 999px; font-weight: 500;">
+                             style="width: 80px; height: 80px; border-radius: 50%; border: 4px solid white; background: #e5e5e5; object-fit: cover;">
+                        <button id="editProfileBtn" style="background: #f97316; color: white; border: none; padding: 8px 20px; border-radius: 999px; font-weight: 500; cursor: pointer;">
                             Edit Profil
                         </button>
                     </div>
@@ -175,7 +458,6 @@
                 </div>
             </div>
             
-            <!-- Tab: Postingan user -->
             <div style="margin-top: 16px; border-top: 1px solid #e5e5e5;">
                 <div style="display: flex;">
                     <button id="profilePostsTab" class="profile-tab active">📷 Postingan</button>
@@ -188,42 +470,874 @@
         </div>
     </div>
 
-    <!-- MODAL DETAIL POST + KOMENTAR -->
-    <div id="postModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
-        <div style="background: white; max-width: 500px; width: 90%; max-height: 80vh; border-radius: 20px; overflow-y: auto;">
-            <div style="padding: 20px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="font-weight: 700;">Detail Postingan</h3>
-                    <button id="closePostModal" style="background: none; border: none; font-size: 20px;">✕</button>
-                </div>
+    <!-- ========== MODAL UPLOAD ========== -->
+    <div id="uploadModal" class="modal">
+        <div class="modal-content" style="padding: 20px;">
+            <h2 style="margin-bottom: 20px;">📤 Buat Postingan Baru</h2>
+            
+            <div class="form-group">
+                <label>Apa yang kamu pikirkan?</label>
+                <textarea id="postContent" rows="3" placeholder="Tulis sesuatu..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Region</label>
+                <select id="postRegion">
+                    <option value="">Pilih daerah (opsional)</option>
+                    <option value="Jawa">Jawa</option>
+                    <option value="Sumatera">Sumatera</option>
+                    <option value="Kalimantan">Kalimantan</option>
+                    <option value="Sulawesi">Sulawesi</option>
+                    <option value="Papua">Papua</option>
+                    <option value="Bali">Bali</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Upload Media (Foto/Video max 15 detik)</label>
+                <input type="file" id="mediaUpload" accept="image/*,video/*" style="width: 100%; padding: 8px;">
+                <small style="color: #78716c;">Format: JPG, PNG, MP4 (max 15 detik)</small>
+            </div>
+            
+            <div id="mediaPreview" style="margin-bottom: 16px;"></div>
+            
+            <div style="display: flex; gap: 12px;">
+                <button id="cancelUpload" class="upload-btn" style="background: #78716c;">Batal</button>
+                <button id="submitPost" class="upload-btn" style="flex: 2;">Posting</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODAL EDIT PROFIL ========== -->
+    <div id="editProfileModal" class="modal">
+        <div class="modal-content" style="padding: 20px;">
+            <h2 style="margin-bottom: 20px;">✏️ Edit Profil</h2>
+            
+            <div class="form-group">
+                <label>Nama Lengkap</label>
+                <input type="text" id="editFullName" placeholder="Nama kamu">
+            </div>
+            
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="editUsername" placeholder="username">
+            </div>
+            
+            <div class="form-group">
+                <label>Bio</label>
+                <textarea id="editBio" rows="3" placeholder="Cerita tentang kamu..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Foto Profil</label>
+                <input type="file" id="avatarUpload" accept="image/*">
+            </div>
+            
+            <div style="display: flex; gap: 12px;">
+                <button id="cancelEdit" class="upload-btn" style="background: #78716c;">Batal</button>
+                <button id="saveProfile" class="upload-btn" style="flex: 2;">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODAL DETAIL POST ========== -->
+    <div id="postModal" class="modal">
+        <div class="modal-content" style="padding: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h3 style="font-weight: 700;">Detail Postingan</h3>
+                <button id="closePostModal" style="background: none; border: none; font-size: 20px; cursor: pointer;">✕</button>
+            </div>
+            
+            <div id="modalPostContent"></div>
+            
+            <div style="margin-top: 20px;">
+                <h4 style="font-weight: 600; margin-bottom: 12px;">💬 Komentar</h4>
+                <div id="commentsList" style="max-height: 200px; overflow-y: auto; margin-bottom: 12px;"></div>
                 
-                <div id="modalPostContent"></div>
-                
-                <div style="margin-top: 20px;">
-                    <h4 style="font-weight: 600; margin-bottom: 12px;">💬 Komentar</h4>
-                    <div id="commentsList" style="max-height: 200px; overflow-y: auto;"></div>
-                    
-                    <div style="display: flex; gap: 8px; margin-top: 12px;">
-                        <input type="text" id="commentInput" placeholder="Tulis komentar..." 
-                               style="flex: 1; padding: 10px; border: 1px solid #e5e5e5; border-radius: 999px;">
-                        <button id="submitComment" style="background: #f97316; color: white; border: none; padding: 10px 20px; border-radius: 999px;">
-                            Kirim
-                        </button>
-                    </div>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="commentInput" placeholder="Tulis komentar..." 
+                           style="flex: 1; padding: 10px; border: 1px solid #e5e5e4; border-radius: 999px;">
+                    <button id="submitComment" style="background: #f97316; color: white; border: none; padding: 10px 20px; border-radius: 999px; cursor: pointer;">
+                        Kirim
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Bottom Nav -->
+    <!-- ========== BOTTOM NAV ========== -->
     <nav class="bottom-nav">
         <i class="fas fa-home nav-item active" data-page="beranda"></i>
         <i class="fas fa-compass nav-item" data-page="jelajah"></i>
+        <i class="fas fa-plus-circle nav-item" id="uploadNav" style="color: #d97706; font-size: 28px; margin-top: -10px;"></i>
         <i class="far fa-bell nav-item" data-page="notifikasi"></i>
         <i class="far fa-user nav-item" data-page="profil"></i>
     </nav>
 
-    <script src="supabase-config.js"></script>
-    <script src="index.js"></script>
+    <script>
+        // ========== VARIABLES ==========
+        let currentUser = null;
+        let currentPostId = null;
+        let currentRegion = 'all';
+        let selectedFile = null;
+
+        // ========== LOADING ==========
+        function showLoading(show) {
+            document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+        }
+
+        // ========== FORMAT DATE ==========
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diff = Math.floor((now - date) / 1000);
+            
+            if (diff < 60) return `${diff} detik lalu`;
+            if (diff < 3600) return `${Math.floor(diff / 60)} menit lalu`;
+            if (diff < 86400) return `${Math.floor(diff / 3600)} jam lalu`;
+            return `${Math.floor(diff / 86400)} hari lalu`;
+        }
+
+        // ========== CEK SESSION ==========
+        async function init() {
+            showLoading(true);
+            
+            try {
+                const session = await window.getSession();
+                
+                if (!session) {
+                    window.location.href = 'lgn.html';
+                    return;
+                }
+
+                currentUser = session.user;
+                
+                const avatar = currentUser.user_metadata?.avatar_url;
+                if (avatar) {
+                    document.getElementById('userAvatar').src = avatar;
+                    document.getElementById('userAvatar').style.display = 'block';
+                }
+
+                await loadFeed();
+                setupFilters();
+                
+            } catch (error) {
+                console.error('Error:', error);
+                window.location.href = 'lgn.html';
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // ========== FILTER ==========
+        function setupFilters() {
+            document.querySelectorAll('.filter-chip').forEach(chip => {
+                chip.addEventListener('click', async () => {
+                    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                    
+                    currentRegion = chip.dataset.region;
+                    await loadFeed();
+                });
+            });
+        }
+
+        // ========== LOAD FEED ==========
+        async function loadFeed() {
+            const container = document.getElementById('feedContainer');
+            
+            container.innerHTML = '<div style="text-align: center; padding: 40px;"><i class="fas fa-spinner fa-spin"></i><p>Memuat...</p></div>';
+            
+            try {
+                let query = supabase
+                    .from('posts')
+                    .select(`
+                        *,
+                        profiles:user_id (id, username, full_name, avatar_url)
+                    `)
+                    .order('created_at', { ascending: false });
+                
+                if (currentRegion !== 'all') {
+                    query = query.eq('region', currentRegion);
+                }
+                
+                const { data: posts, error } = await query;
+                
+                if (error) throw error;
+                
+                if (posts.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; padding: 40px; color: #78716c;">Belum ada postingan</p>';
+                    return;
+                }
+                
+                const postsWithLikeStatus = await Promise.all(posts.map(async (post) => {
+                    const { data: like } = await supabase
+                        .from('likes')
+                        .select('id')
+                        .eq('user_id', currentUser.id)
+                        .eq('post_id', post.id)
+                        .maybeSingle();
+                    
+                    return { ...post, isLiked: !!like };
+                }));
+                
+                renderFeed(postsWithLikeStatus);
+                
+            } catch (error) {
+                console.error('Gagal load feed:', error);
+                container.innerHTML = '<p style="color: red; text-align: center;">Gagal memuat feed</p>';
+            }
+        }
+
+        function renderFeed(posts) {
+            const container = document.getElementById('feedContainer');
+            
+            container.innerHTML = posts.map(post => `
+                <div class="post-card" data-post-id="${post.id}">
+                    <div style="display: flex; gap: 12px; margin-bottom: 12px; cursor: pointer;" onclick="showPage('profil'); loadUserProfile('${post.user_id}')">
+                        <img src="${post.profiles?.avatar_url || 'https://ui-avatars.com/api/?name=' + (post.profiles?.full_name || 'User')}" 
+                             style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                        <div>
+                            <span style="font-weight: 600;">${post.profiles?.full_name || 'User'}</span>
+                            ${post.region ? `<span style="font-size: 11px; background: #f5f5f4; padding: 2px 8px; border-radius: 999px; margin-left: 6px;">${post.region}</span>` : ''}
+                            <span style="font-size: 12px; color: #a8a29e; display: block;">${formatDate(post.created_at)}</span>
+                        </div>
+                    </div>
+                    
+                    <p style="margin: 0 0 12px 0; cursor: pointer;" onclick="openPostModal('${post.id}')">${post.content}</p>
+                    
+                    ${post.media_url ? (post.media_type?.startsWith('video') ? `
+                        <video src="${post.media_url}" controls style="width: 100%; max-height: 300px; border-radius: 12px; margin-bottom: 12px; cursor: pointer;" onclick="openPostModal('${post.id}')"></video>
+                    ` : `
+                        <img src="${post.media_url}" style="width: 100%; max-height: 300px; object-fit: cover; border-radius: 12px; margin-bottom: 12px; cursor: pointer;" onclick="openPostModal('${post.id}')">
+                    `) : ''}
+                    
+                    <div style="display: flex; gap: 24px; border-top: 1px solid #e7e5e4; padding-top: 12px;">
+                        <button class="like-btn" data-post-id="${post.id}" data-liked="${post.isLiked}" 
+                                style="background: none; border: none; display: flex; align-items: center; gap: 6px; color: ${post.isLiked ? '#ef4444' : '#57534e'}; cursor: pointer;">
+                            <i class="${post.isLiked ? 'fas' : 'far'} fa-heart"></i>
+                            <span class="like-count">${post.likes_count || 0}</span>
+                        </button>
+                        <button class="comment-btn" data-post-id="${post.id}" 
+                                style="background: none; border: none; display: flex; align-items: center; gap: 6px; color: #57534e; cursor: pointer;">
+                            <i class="far fa-comment"></i>
+                            <span>${post.comments_count || 0}</span>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            attachLikeListeners();
+        }
+
+        function attachLikeListeners() {
+            document.querySelectorAll('.like-btn').forEach(btn => {
+                btn.addEventListener('click', async function(e) {
+                    e.stopPropagation();
+                    
+                    const postId = this.dataset.postId;
+                    const isLiked = this.dataset.liked === 'true';
+                    const icon = this.querySelector('i');
+                    const countSpan = this.querySelector('.like-count');
+                    let count = parseInt(countSpan.textContent);
+                    
+                    try {
+                        if (isLiked) {
+                            await supabase
+                                .from('likes')
+                                .delete()
+                                .eq('user_id', currentUser.id)
+                                .eq('post_id', postId);
+                            
+                            icon.classList.remove('fas');
+                            icon.classList.add('far');
+                            this.style.color = '#57534e';
+                            countSpan.textContent = count - 1;
+                            this.dataset.liked = 'false';
+                        } else {
+                            await supabase
+                                .from('likes')
+                                .insert({ user_id: currentUser.id, post_id: postId });
+                            
+                            icon.classList.remove('far');
+                            icon.classList.add('fas');
+                            this.style.color = '#ef4444';
+                            countSpan.textContent = count + 1;
+                            this.dataset.liked = 'true';
+                        }
+                    } catch (error) {
+                        console.error('Gagal like/unlike:', error);
+                    }
+                });
+            });
+            
+            document.querySelectorAll('.comment-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openPostModal(btn.dataset.postId);
+                });
+            });
+        }
+
+        // ========== UPLOAD MEDIA ==========
+        document.getElementById('mediaUpload')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            // Validasi video durasi
+            if (file.type.startsWith('video/')) {
+                const video = document.createElement('video');
+                video.preload = 'metadata';
+                video.onloadedmetadata = function() {
+                    window.URL.revokeObjectURL(video.src);
+                    if (video.duration > 15) {
+                        alert('Video maksimal 15 detik!');
+                        document.getElementById('mediaUpload').value = '';
+                        selectedFile = null;
+                        document.getElementById('mediaPreview').innerHTML = '';
+                    } else {
+                        selectedFile = file;
+                        showPreview(file);
+                    }
+                };
+                video.src = URL.createObjectURL(file);
+            } else {
+                selectedFile = file;
+                showPreview(file);
+            }
+        });
+
+        function showPreview(file) {
+            const preview = document.getElementById('mediaPreview');
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                if (file.type.startsWith('video/')) {
+                    preview.innerHTML = `
+                        <div class="preview-container">
+                            <video src="${e.target.result}" controls style="max-height: 200px; border-radius: 12px;"></video>
+                            <button class="remove-preview" onclick="removeMedia()">✕</button>
+                        </div>
+                    `;
+                } else {
+                    preview.innerHTML = `
+                        <div class="preview-container">
+                            <img src="${e.target.result}" style="max-height: 200px; border-radius: 12px;">
+                            <button class="remove-preview" onclick="removeMedia()">✕</button>
+                        </div>
+                    `;
+                }
+            };
+            
+            reader.readAsDataURL(file);
+        }
+
+        window.removeMedia = function() {
+            selectedFile = null;
+            document.getElementById('mediaUpload').value = '';
+            document.getElementById('mediaPreview').innerHTML = '';
+        };
+
+        // ========== SUBMIT POST ==========
+        document.getElementById('submitPost')?.addEventListener('click', async () => {
+            const content = document.getElementById('postContent').value.trim();
+            const region = document.getElementById('postRegion').value;
+            
+            if (!content) {
+                alert('Tulis sesuatu dulu!');
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                let mediaUrl = null;
+                let mediaType = null;
+                
+                // Upload file jika ada
+                if (selectedFile) {
+                    const fileName = `${Date.now()}_${selectedFile.name}`;
+                    const { data, error } = await supabase.storage
+                        .from('scrollone-media')
+                        .upload(fileName, selectedFile);
+                    
+                    if (error) throw error;
+                    
+                    const { data: { publicUrl } } = supabase.storage
+                        .from('scrollone-media')
+                        .getPublicUrl(fileName);
+                    
+                    mediaUrl = publicUrl;
+                    mediaType = selectedFile.type;
+                }
+                
+                // Simpan post
+                const { error } = await supabase
+                    .from('posts')
+                    .insert({
+                        user_id: currentUser.id,
+                        content: content,
+                        region: region || null,
+                        media_url: mediaUrl,
+                        media_type: mediaType
+                    });
+                
+                if (error) throw error;
+                
+                // Close modal dan reset
+                document.getElementById('uploadModal').style.display = 'none';
+                document.getElementById('postContent').value = '';
+                document.getElementById('postRegion').value = '';
+                document.getElementById('mediaUpload').value = '';
+                document.getElementById('mediaPreview').innerHTML = '';
+                selectedFile = null;
+                
+                // Refresh feed
+                await loadFeed();
+                
+            } catch (error) {
+                console.error('Gagal posting:', error);
+                alert('Gagal posting: ' + error.message);
+            } finally {
+                showLoading(false);
+            }
+        });
+
+        // ========== NAVIGASI HALAMAN ==========
+        window.showPage = function(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.style.display = 'none');
+            document.getElementById(`page-${pageId}`).style.display = 'block';
+            
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            document.querySelector(`[data-page="${pageId}"]`)?.classList.add('active');
+            
+            if (pageId === 'notifikasi') loadNotifications();
+            if (pageId === 'profil') loadUserProfile();
+            if (pageId === 'jelajah') loadExplore();
+        }
+
+        // ========== LOAD NOTIFIKASI ==========
+        async function loadNotifications() {
+            const container = document.getElementById('notificationsList');
+            container.innerHTML = '<div style="text-align: center; padding: 40px;"><i class="fas fa-spinner fa-spin"></i><p>Memuat...</p></div>';
+            
+            try {
+                const { data, error } = await supabase
+                    .from('notifications')
+                    .select(`
+                        *,
+                        sender:profiles!sender_id (full_name, avatar_url)
+                    `)
+                    .eq('user_id', currentUser.id)
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                if (data.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: #78716c; padding: 40px;">Belum ada notifikasi</p>';
+                    return;
+                }
+                
+                container.innerHTML = data.map(notif => `
+                    <div class="notification-item">
+                        <img src="${notif.sender?.avatar_url || 'https://ui-avatars.com/api/?name=' + (notif.sender?.full_name || 'User')}" 
+                             style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                        <div>
+                            <p><b>${notif.sender?.full_name || 'Seseorang'}</b> ${getNotifText(notif.type)}</p>
+                            <small style="color: #78716c;">${formatDate(notif.created_at)}</small>
+                        </div>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                container.innerHTML = '<p style="color: red; text-align: center;">Gagal load notifikasi</p>';
+            }
+        }
+
+        function getNotifText(type) {
+            const texts = {
+                'like': 'menyukai postinganmu',
+                'comment': 'mengomentari postinganmu',
+                'follow': 'mengikutimu'
+            };
+            return texts[type] || 'berinteraksi denganmu';
+        }
+
+        // ========== LOAD PROFIL ==========
+        window.loadUserProfile = async function(userId = null) {
+            const targetUserId = userId || currentUser.id;
+            
+            try {
+                const { data: profile, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', targetUserId)
+                    .single();
+                
+                if (error) throw error;
+                
+                document.getElementById('profileName').textContent = profile.full_name || 'User';
+                document.getElementById('profileUsername').textContent = '@' + (profile.username || 'user');
+                document.getElementById('profileBio').textContent = profile.bio || 'Halo! Aku pengguna ScrollOne 👋';
+                document.getElementById('profileAvatar').src = profile.avatar_url || 'https://ui-avatars.com/api/?name=' + (profile.full_name || 'User');
+                
+                const { count: followers } = await supabase
+                    .from('follows')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('following_id', targetUserId);
+                
+                document.getElementById('followersCount').textContent = followers || 0;
+                
+                const { count: following } = await supabase
+                    .from('follows')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('follower_id', targetUserId);
+                
+                document.getElementById('followingCount').textContent = following || 0;
+                
+                await loadUserPosts(targetUserId);
+                await loadUserLikes(targetUserId);
+                
+                if (targetUserId !== currentUser.id) {
+                    document.getElementById('editProfileBtn').style.display = 'none';
+                } else {
+                    document.getElementById('editProfileBtn').style.display = 'block';
+                }
+                
+            } catch (error) {
+                console.error('Gagal load profil:', error);
+            }
+        }
+
+        async function loadUserPosts(userId) {
+            const { data: posts, error } = await supabase
+                .from('posts')
+                .select('*')
+                .eq('user_id', userId)
+                .order('created_at', { ascending: false });
+            
+            if (error) return;
+            
+            document.getElementById('postCount').textContent = posts.length;
+            
+            const grid = document.getElementById('profilePostsGrid');
+            grid.innerHTML = posts.map(post => `
+                <div class="post-thumbnail" onclick="openPostModal('${post.id}')">
+                    ${post.media_url ? (post.media_type?.startsWith('video') ? `
+                        <video src="${post.media_url}" style="width: 100%; height: 100%; object-fit: cover;"></video>
+                    ` : `
+                        <img src="${post.media_url}" style="width: 100%; height: 100%; object-fit: cover;">
+                    `) : `
+                        <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: #e5e5e5;">📝</div>
+                    `}
+                </div>
+            `).join('');
+        }
+
+        async function loadUserLikes(userId) {
+            const { data: likes, error } = await supabase
+                .from('likes')
+                .select(`
+                    post_id,
+                    posts (*)
+                `)
+                .eq('user_id', userId);
+            
+            if (error) return;
+            
+            const grid = document.getElementById('profileLikesGrid');
+            const likedPosts = likes.map(l => l.posts).filter(p => p);
+            
+            grid.innerHTML = likedPosts.map(post => `
+                <div class="post-thumbnail" onclick="openPostModal('${post.id}')">
+                    ${post.media_url ? (post.media_type?.startsWith('video') ? `
+                        <video src="${post.media_url}" style="width: 100%; height: 100%; object-fit: cover;"></video>
+                    ` : `
+                        <img src="${post.media_url}" style="width: 100%; height: 100%; object-fit: cover;">
+                    `) : `
+                        <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: #e5e5e5;">📝</div>
+                    `}
+                </div>
+            `).join('');
+        }
+
+        // ========== LOAD EXPLORE ==========
+        async function loadExplore(query = '') {
+            let queryBuilder = supabase
+                .from('posts')
+                .select(`
+                    *,
+                    profiles:user_id (full_name, avatar_url)
+                `)
+                .order('likes_count', { ascending: false })
+                .limit(30);
+            
+            if (query) {
+                queryBuilder = queryBuilder.ilike('content', `%${query}%`);
+            }
+            
+            const { data: posts, error } = await queryBuilder;
+            
+            if (error) return;
+            
+            const container = document.getElementById('exploreFeed');
+            container.innerHTML = posts.map(post => `
+                <div class="explore-item" onclick="openPostModal('${post.id}')" style="cursor: pointer;">
+                    <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                        <img src="${post.profiles?.avatar_url || 'https://ui-avatars.com/api/?name=' + (post.profiles?.full_name || 'User')}" 
+                             style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+                        <b>${post.profiles?.full_name || 'User'}</b>
+                    </div>
+                    <p>${post.content.substring(0, 100)}${post.content.length > 100 ? '...' : ''}</p>
+                    <small>❤️ ${post.likes_count || 0} · 💬 ${post.comments_count || 0}</small>
+                </div>
+            `).join('');
+        }
+
+        // ========== MODAL KOMENTAR ==========
+        window.openPostModal = async function(postId) {
+            currentPostId = postId;
+            
+            const { data: post, error } = await supabase
+                .from('posts')
+                .select(`
+                    *,
+                    profiles:user_id (full_name, avatar_url)
+                `)
+                .eq('id', postId)
+                .single();
+            
+            if (error) return;
+            
+            document.getElementById('modalPostContent').innerHTML = `
+                <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                    <img src="${post.profiles?.avatar_url || 'https://ui-avatars.com/api/?name=' + (post.profiles?.full_name || 'User')}" 
+                         style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                    <div>
+                        <b>${post.profiles?.full_name || 'User'}</b>
+                        <p style="margin-top: 4px;">${post.content}</p>
+                        ${post.media_url ? (post.media_type?.startsWith('video') ? `
+                            <video src="${post.media_url}" controls style="width: 100%; max-height: 200px; border-radius: 8px; margin-top: 8px;"></video>
+                        ` : `
+                            <img src="${post.media_url}" style="width: 100%; max-height: 200px; object-fit: cover; border-radius: 8px; margin-top: 8px;">
+                        `) : ''}
+                    </div>
+                </div>
+            `;
+            
+            await loadComments(postId);
+            document.getElementById('postModal').style.display = 'flex';
+        }
+
+        async function loadComments(postId) {
+            const { data: comments, error } = await supabase
+                .from('comments')
+                .select(`
+                    *,
+                    profiles:user_id (full_name, avatar_url)
+                `)
+                .eq('post_id', postId)
+                .order('created_at', { ascending: true });
+            
+            const container = document.getElementById('commentsList');
+            
+            if (!comments || comments.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #78716c;">Belum ada komentar</p>';
+                return;
+            }
+            
+            container.innerHTML = comments.map(c => `
+                <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                    <img src="${c.profiles?.avatar_url || 'https://ui-avatars.com/api/?name=' + (c.profiles?.full_name || 'User')}" 
+                         style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+                    <div>
+                        <b>${c.profiles?.full_name || 'User'}</b>
+                        <p style="font-size: 14px; margin: 2px 0 0;">${c.content}</p>
+                        <small style="color: #78716c;">${formatDate(c.created_at)}</small>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ========== SUBMIT KOMENTAR ==========
+        document.getElementById('submitComment')?.addEventListener('click', async () => {
+            const input = document.getElementById('commentInput');
+            if (!input.value.trim() || !currentPostId) return;
+            
+            try {
+                const { error } = await supabase
+                    .from('comments')
+                    .insert({
+                        user_id: currentUser.id,
+                        post_id: currentPostId,
+                        content: input.value
+                    });
+                
+                if (error) throw error;
+                
+                input.value = '';
+                await loadComments(currentPostId);
+                
+            } catch (error) {
+                alert('Gagal mengirim komentar');
+            }
+        });
+
+        // ========== CLOSE MODAL ==========
+        document.getElementById('closePostModal')?.addEventListener('click', () => {
+            document.getElementById('postModal').style.display = 'none';
+        });
+
+        // ========== TAB PROFIL ==========
+        document.getElementById('profilePostsTab')?.addEventListener('click', () => {
+            document.getElementById('profilePostsTab').classList.add('active');
+            document.getElementById('profileLikesTab').classList.remove('active');
+            document.getElementById('profilePostsGrid').style.display = 'grid';
+            document.getElementById('profileLikesGrid').style.display = 'none';
+        });
+
+        document.getElementById('profileLikesTab')?.addEventListener('click', () => {
+            document.getElementById('profileLikesTab').classList.add('active');
+            document.getElementById('profilePostsTab').classList.remove('active');
+            document.getElementById('profilePostsGrid').style.display = 'none';
+            document.getElementById('profileLikesGrid').style.display = 'grid';
+        });
+
+        // ========== EDIT PROFIL ==========
+        document.getElementById('editProfileBtn')?.addEventListener('click', async () => {
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', currentUser.id)
+                .single();
+            
+            if (profile) {
+                document.getElementById('editFullName').value = profile.full_name || '';
+                document.getElementById('editUsername').value = profile.username || '';
+                document.getElementById('editBio').value = profile.bio || '';
+            }
+            
+            document.getElementById('editProfileModal').style.display = 'flex';
+        });
+
+        document.getElementById('cancelEdit')?.addEventListener('click', () => {
+            document.getElementById('editProfileModal').style.display = 'none';
+        });
+
+        document.getElementById('saveProfile')?.addEventListener('click', async () => {
+            const fullName = document.getElementById('editFullName').value.trim();
+            const username = document.getElementById('editUsername').value.trim();
+            const bio = document.getElementById('editBio').value.trim();
+            const avatarFile = document.getElementById('avatarUpload').files[0];
+            
+            showLoading(true);
+            
+            try {
+                let avatarUrl = null;
+                
+                if (avatarFile) {
+                    const fileName = `avatars/${currentUser.id}_${Date.now()}.jpg`;
+                    const { error: uploadError } = await supabase.storage
+                        .from('avatars')
+                        .upload(fileName, avatarFile);
+                    
+                    if (uploadError) throw uploadError;
+                    
+                    const { data: { publicUrl } } = supabase.storage
+                        .from('avatars')
+                        .getPublicUrl(fileName);
+                    
+                    avatarUrl = publicUrl;
+                }
+                
+                const updates = {
+                    full_name: fullName,
+                    username: username,
+                    bio: bio
+                };
+                
+                if (avatarUrl) updates.avatar_url = avatarUrl;
+                
+                const { error } = await supabase
+                    .from('profiles')
+                    .update(updates)
+                    .eq('id', currentUser.id);
+                
+                if (error) throw error;
+                
+                document.getElementById('editProfileModal').style.display = 'none';
+                await loadUserProfile();
+                
+                if (avatarUrl) {
+                    document.getElementById('userAvatar').src = avatarUrl;
+                }
+                
+            } catch (error) {
+                console.error('Gagal update profil:', error);
+                alert('Gagal update profil');
+            } finally {
+                showLoading(false);
+            }
+        });
+
+        // ========== SEARCH ==========
+        document.getElementById('searchInput')?.addEventListener('input', (e) => {
+            loadExplore(e.target.value);
+        });
+
+        // ========== UPLOAD MODAL ==========
+        document.getElementById('uploadNav')?.addEventListener('click', () => {
+            document.getElementById('uploadModal').style.display = 'flex';
+        });
+
+        document.getElementById('cancelUpload')?.addEventListener('click', () => {
+            document.getElementById('uploadModal').style.display = 'none';
+            document.getElementById('postContent').value = '';
+            document.getElementById('postRegion').value = '';
+            document.getElementById('mediaUpload').value = '';
+            document.getElementById('mediaPreview').innerHTML = '';
+            selectedFile = null;
+        });
+
+        // ========== DARK MODE ==========
+        document.getElementById('darkToggle')?.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            const icon = document.querySelector('#darkToggle i');
+            if (icon) {
+                if (icon.classList.contains('fa-moon')) {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                } else {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                }
+            }
+        });
+
+        // ========== LOGOUT ==========
+        document.getElementById('logoutBtn')?.addEventListener('click', () => {
+            window.logout();
+        });
+
+        // ========== NAVIGASI ==========
+        document.querySelectorAll('.nav-item[data-page]').forEach(item => {
+            item.addEventListener('click', () => {
+                const page = item.dataset.page;
+                showPage(page);
+            });
+        });
+
+        // ========== CLOSE MODAL WHEN CLICK OUTSIDE ==========
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+
+        // ========== INIT ==========
+        init();
+    </script>
 </body>
 </html>
