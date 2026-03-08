@@ -22,7 +22,7 @@ const baseUrl = isGitHubPages
     : window.location.origin;
 
 // Redirect URL untuk Google OAuth
-const redirectTo = baseUrl;
+const redirectTo = 'https://vanzzcode.github.io/ScrollOne/';
 
 // ========== HELPER FUNCTIONS ==========
 function showMessage(text, type = 'error') {
