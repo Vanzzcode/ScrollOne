@@ -21,7 +21,7 @@ async function init() {
         const session = await window.getSession();
         
         if (!session) {
-            window.location.href = 'Login.html';
+            window.location.href = 'lgn.html';
             return;
         }
 
@@ -37,7 +37,7 @@ async function init() {
         
     } catch (error) {
         console.error('Error:', error);
-        window.location.href = 'Login.html';
+        window.location.href = 'lgn.html';
     } finally {
         showLoading(false);
     }
