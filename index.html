@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScrollOne · Beranda</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        .app-header {
+            background: white;
+            border-bottom: 1px solid #e7e5e4;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .feed { padding: 16px; }
+        .post-card {
+            background: white;
+            border: 1px solid #e7e5e4;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e7e5e4;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .nav-item {
+            color: #a8a29e;
+            font-size: 20px;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+        .nav-item.active { color: #d97706; }
+        .dark .app-header,
+        .dark .post-card,
+        .dark .bottom-nav {
+            background: #1c1917;
+            border-color: #44403c;
+        }
+        .filter-chip {
+            display: inline-block;
+            padding: 6px 16px;
+            background: #f5f5f4;
+            border-radius: 999px;
+            font-size: 14px;
+            margin-right: 8px;
+            white-space: nowrap;
+        }
+        .filter-chip.active {
+            background: #d97706;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading -->
+    <div id="loadingOverlay" style="display: none; position: fixed; inset: 0; background: white; z-index: 1000; align-items: center; justify-content: center;">
+        <div class="loading"></div>
+    </div>
+
+    <!-- Main App -->
+    <div id="mainApp" style="max-width: 400px; margin: 0 auto; background: #fafaf9; min-height: 100vh; padding-bottom: 70px;">
+        
+        <!-- Header -->
+        <header class="app-header">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 24px;">🏠</span>
+                <h1 style="font-size: 20px; font-weight: bold; background: linear-gradient(135deg, #b45309, #7e22ce); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0;">
+                    ScrollOne
+                </h1>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <img id="userAvatar" src="" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid #d97706; display: none;">
+                <button id="darkToggle" style="background: none; border: none; font-size: 18px; cursor: pointer; color: #57534e;">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="logoutBtn" style="background: none; border: none; font-size: 18px; cursor: pointer; color: #ef4444;">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Filter -->
+        <div style="padding: 12px 16px; overflow-x: auto; white-space: nowrap;">
+            <span class="filter-chip active">🏠 Semua</span>
+            <span class="filter-chip">🌊 Jawa</span>
+            <span class="filter-chip">⛰️ Sumatera</span>
+            <span class="filter-chip">🌴 Kalimantan</span>
+            <span class="filter-chip">🦉 Sulawesi</span>
+        </div>
+
+        <!-- Feed -->
+        <div class="feed" id="feedContainer">
+            <div style="text-align: center; padding: 40px 0; color: #a8a29e;">
+                <i class="fas fa-spinner fa-spin fa-2x"></i>
+                <p>Memuat postingan...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Nav -->
+    <nav class="bottom-nav">
+        <i class="fas fa-home nav-item active" data-page="home"></i>
+        <i class="fas fa-compass nav-item" data-page="explore"></i>
+        <i class="far fa-bell nav-item" data-page="notifications"></i>
+        <i class="far fa-user nav-item" data-page="profile"></i>
+    </nav>
+
+    <script src="js/supabase-config.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>
