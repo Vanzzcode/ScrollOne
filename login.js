@@ -18,11 +18,11 @@ const regPassword = document.getElementById('regPassword');
 // Deteksi apakah running di GitHub Pages atau localhost
 const isGitHubPages = window.location.hostname.includes('github.io');
 const baseUrl = isGitHubPages 
-    ? 'https://vanzzcode.github.io/ScrollOne'  // GANTI dengan username GitHub kamu
+    ? 'https://vanzzcode.github.io/ScrollOne/'
     : window.location.origin;
 
 // Redirect URL untuk Google OAuth
-const redirectTo = baseUrl + '/index.html';
+const redirectTo = baseUrl;
 
 // ========== HELPER FUNCTIONS ==========
 function showMessage(text, type = 'error') {
